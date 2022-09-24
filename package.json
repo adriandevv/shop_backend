@@ -1,0 +1,24 @@
+{
+  "devDependencies": {
+    "eslint": "^8.23.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "nodemon": "^2.0.19",
+    "prettier": "^2.7.1"
+  },
+  "name": "shop-backend",
+  "version": "1.0.0",
+  "description": "backend del proyecto de la tienda de platzi",
+  "main": "index.js",
+  "author": "Adrian Valencia Hernandez <adrian15996@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "express": "^4.18.1",
+    "faker": "5.5.3"
+  }
+}
