@@ -4,25 +4,25 @@ const productsService = require('../services/product.service');
 const router = express.Router();
 const service = new productsService();
 
-router.get('/filter/', (req, res) => {
+router.get('/filter/', async (req, res) => {
   res.send('yo soy un filter');
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   const { id } = req.params;
-  const data = service.findOne(id);
+  const data = await service.findOne(id);
 
   res.json(data);
 });
 
-router.get('/', (req, res) => {
-  const products = service.find();
+router.get('/', async (req, res) => {
+  const products = await service.find();
   res.json(products);
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const body = req.body;
-  service.create(body);
+  await service.create(body);
   res.status(201).json({
     message: 'registrado',
     data: body,
