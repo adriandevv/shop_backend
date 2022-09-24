@@ -8,11 +8,14 @@ router.get('/filter/', async (req, res) => {
   res.send('yo soy un filter');
 });
 
-router.get('/:id', async (req, res) => {
-  const { id } = req.params;
-  const data = await service.findOne(id);
-
-  res.json(data);
+router.get('/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const data = await service.findOne(id);
+    res.json(data);
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.get('/', async (req, res) => {
@@ -29,14 +32,18 @@ router.post('/', async (req, res) => {
   });
 });
 
-router.put('/:id', (req, res) => {
-  const { id } = req.params;
-  const body = req.body;
-  res.json({
-    message: 'Updated',
-    data: body,
-    id,
-  });
+router.patch('/:id', (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const body = req.body;
+    res.json({
+      message: 'Updated',
+      data: body,
+      id,
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.delete('/:id', (req, res) => {
