@@ -1,5 +1,6 @@
 const express = require('express');
 const routerApi = require('./routes');
+const cors = require('cors');
 const {
   logErrors,
   ErrorHandler,
@@ -7,8 +8,21 @@ const {
 } = require('./middlewares/error.handler');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 app.use(express.json());
+
+const whitelist = ['http://localhost:8080'];
+const options ={
+  origin:(origin, cb)=>{
+    if(whitelist.includes(origin || !origin)){
+      cb(null,true);
+    }else{
+      cb(new Error('No tienes acceso'))
+    }
+    
+  }
+}
+app.use(cors());
 
 routerApi(app);
 
