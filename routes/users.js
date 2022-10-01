@@ -4,12 +4,12 @@ const userService = require('../services/users.service');
 
 const service = new userService();
 
-router.get('/', (req, res) => {
-  const users = service.find();
+router.get('/', async(req, res) => {
+  const users = await service.find();
   res.json(users);
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id',(req, res) => {
   const { id } = req.params;
   const response = service.findOne(id);
   res.status(200).json({

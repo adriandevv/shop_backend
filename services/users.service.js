@@ -1,8 +1,13 @@
 const faker = require('faker');
-class productsService {
+
+const pool = require('../libs/postgres.pool.js');
+
+class userService {
   constructor() {
     this.users = [];
     this.generate();
+    this.pool = pool;
+    this.pool.on('error', (err) => console.error(err));
   }
   generate() {
     for (let index = 0; index < 10; index++) {
@@ -21,8 +26,10 @@ class productsService {
       ...data,
     });
   }
-  find() {
-    return this.users;
+  async find() {
+    const query = 'SELECT * FROM tasks';
+    const rta = await this.pool.query(query);
+    return rta.rows
   }
   findOne(id) {
     return this.users.find((item) => item.id === id);
@@ -46,4 +53,4 @@ class productsService {
     return { id: index, message: 'deleted' };
   }
 }
-module.exports = productsService;
+module.exports = userService;
