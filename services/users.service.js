@@ -1,56 +1,33 @@
-const faker = require('faker');
+const boom = require('@hapi/boom');
 
-const sequelize = require('../libs/sequelize');
+const { models } = require('../libs/sequelize');
 
 class userService {
   constructor() {
-    this.users = [];
-    this.generate();
   }
-  generate() {
-    for (let index = 0; index < 10; index++) {
-      this.users.push({
-        id: faker.datatype.uuid(),
-        name: faker.name.firstName(),
-        lastname: faker.name.lastName(),
-        phone: faker.phone.phoneNumber(),
-        email: faker.internet.email(),
-      });
-    }
-  }
-  create(data) {
-    this.users.push({
-      id: faker.datatype.uuid(),
-      ...data,
-    });
+  async create(data) {
+    const rta = await models.User.create(data);
   }
   async find() {
-    const query = 'SELECT * FROM tasks;';
-    const [data] = await sequelize.query(query);
-    return data;
+    const rta = await models.User.findAll();
+    return rta;
   }
   async findOne(id) {
-    const query = `SELECT * FROM tasks where id = ${id}`;
-    const [data, metadata] = await this.pool.query(query);
-    return { data, metadata };
-  }
-  update(id, changes) {
-    const index = this.users.findIndex((item) => item.id === id);
-    if (index === -1) {
-      throw new Error('User not found');
-    } else {
-      this.users[index] = changes;
-      return this.users[index];
+    const rta = await models.User.findByPk(id); 
+    if(!rta){
+      throw boom.notFound('User not Found');
     }
+    return rta;
   }
-  delete(id) {
-    const index = this.users.findIndex((item) => item.id === id);
-    if (index === -1) {
-      throw new Error('user not found');
-    } else {
-      this.users.splice(index, 1);
-    }
-    return { id: index, message: 'deleted' };
+  async update(id, changes) {
+    const user = await this.findOne(id);
+    const rta = await user.update(changes);
+    return rta;
+  }
+  async delete(id) {
+    const user = await this.findOne(id);
+    const rta = await user.destroy();
+    return{id}
   }
 }
 module.exports = userService;

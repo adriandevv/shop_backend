@@ -1,62 +1,33 @@
-const faker = require('faker');
 const boom = require('@hapi/boom');
 
-class productsService {
+const { models } = require('../libs/sequelize');
+
+class productService {
   constructor() {
-    this.products = [];
-    this.generate();
-  }
-  async generate() {
-    const limit = 100;
-    for (let index = 0; index < limit; index++) {
-      this.products.push({
-        id: faker.datatype.uuid(),
-        name: faker.commerce.productName(),
-        price: parseInt(faker.commerce.price(), 10),
-        image: faker.image.imageUrl(),
-        isBlock: faker.datatype.boolean(),
-      });
-    }
   }
   async create(data) {
-    const newProduct = {
-      id: faker.datatype.uuid(),
-      ...data,
-    };
-    this.products.push(newProduct);
-    return newProduct;
+    const rta = await models.Product.create(data);
   }
   async find() {
-    return this.products;
+    const rta = await models.Product.findAll();
+    return rta;
   }
   async findOne(id) {
-    const product = this.products.find((item) => item.id === id);
-    if (!product) {
-      throw boom.notFound('Product not found');
+    const rta = await models.Product.findByPk(id); 
+    if(!rta){
+      throw boom.notFound('User not Found');
     }
-    if (product.isBlock) {
-      throw boom.conflict('Product is block');
-    }
-
-    return product;
+    return rta;
   }
   async update(id, changes) {
-    const index = this.products.findIndex((item) => item.id === id);
-    if (index === -1) {
-      throw boom.notFound('Product not found');
-    } else {
-      this.products[index] = changes;
-      return this.products[index];
-    }
+    const user = await this.findOne(id);
+    const rta = await Product.update(changes);
+    return rta;
   }
   async delete(id) {
-    const index = this.products.findIndex((item) => item.id === id);
-    if (index === -1) {
-      throw boom.notFound('Product not found');
-    } else {
-      this.products.splice(index, 1);
-    }
-    return { id: index, message: 'deleted' };
+    const user = await this.findOne(id);
+    const rta = await Product.destroy();
+    return{id}
   }
 }
-module.exports = productsService;
+module.exports = productService;

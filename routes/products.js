@@ -10,9 +10,6 @@ const {
 const router = express.Router();
 const service = new productsService();
 
-router.get('/filter/', async (req, res) => {
-  res.send('yo soy un filter');
-});
 
 router.get(
   '/:id',
@@ -38,7 +35,7 @@ router.post(
   validatorHandler(createProductSchema, 'body'),
   async (req, res) => {
     const body = req.body;
-    await service.create({ ...body, isblock: false });
+    await service.create(body);
     res.status(201).json({
       message: 'registrado',
       data: body,
@@ -54,7 +51,7 @@ router.put(
     try {
       const { id } = req.params;
       const body = req.body;
-      await service.update(id,{...body,isblock:false})
+      await service.update(id,body)
       res.json({
         message: 'Updated',
         data: body,

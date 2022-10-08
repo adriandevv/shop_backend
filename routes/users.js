@@ -1,45 +1,57 @@
 const express = require('express');
 const router = express.Router();
 const userService = require('../services/users.service');
-
 const service = new userService();
 
-router.get('/', async(req, res) => {
+const validatorHandler = require('../middlewares/validator.handler');
+const {
+  getUserSchema,
+  updateUserSchema,
+  createUserSchema,
+} = require('../schema/user.schema');
+
+router.get('/:id', validatorHandler(getUserSchema, 'params'), async(req, res) => {
+  const { id } = req.params;
+  const response = await service.findOne(id);
+  res.status(200).json({
+    response
+  });
+});
+
+router.get('/', async (req, res) => {
   const users = await service.find();
   res.json(users);
 });
 
-router.get('/:id',(req, res) => {
-  const { id } = req.params;
-  const response = service.findOne(id);
-  res.status(200).json({
-    response,
-  });
-});
 
-router.post('/', (req, res) => {
+
+router.post('/', validatorHandler(createUserSchema, 'body'), async(req, res) => {
   const body = req.body;
-  service.create(body);
+  const rta = await service.create(body);
   res.status(201).json({
-    message: 'registrado',
-    data: body,
+    message:'User was created'
   });
 });
 
-router.put('/:id', (req, res) => {
-  const { id } = req.params;
-  const body = req.body;
-  const newData = service.update(id, body);
-  res.json({
-    message: 'Updated',
-    data: newData,
-    id,
-  });
-});
+router.put(
+  '/:id',
+  validatorHandler(getUserSchema, 'params'),
+  validatorHandler(updateUserSchema, 'body'),
+  async(req, res) => {
+    const { id } = req.params;
+    const body = req.body;
+    const rta = await service.update(id, body);
+    res.json({
+      message: 'Updated',
+      data: rta,
+      id,
+    });
+  }
+);
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id',validatorHandler(getUserSchema, 'params'), async (req, res) => {
   const { id } = req.params;
-  const message = service.delete(id);
+  const message = await service.delete(id);
   res.status(200).json({
     message,
   });
