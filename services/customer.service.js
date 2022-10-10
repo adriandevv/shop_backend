@@ -3,18 +3,18 @@ const boom = require('@hapi/boom');
 const { models } = require('../libs/sequelize');
 
 class customerService {
-  constructor() {
-  }
+  constructor() {}
   async create(data) {
     const rta = await models.Customer.create(data);
+    return rta;
   }
   async find() {
     const rta = await models.Customer.findAll();
     return rta;
   }
   async findOne(id) {
-    const rta = await models.Customer.findByPk(id); 
-    if(!rta){
+    const rta = await models.Customer.findByPk(id);
+    if (!rta) {
       throw boom.notFound('User not Found');
     }
     return rta;
@@ -26,8 +26,8 @@ class customerService {
   }
   async delete(id) {
     const customer = await this.findOne(id);
-    const rta = await customer.destroy();
-    return{id}
+    await customer.destroy();
+    return { id };
   }
 }
 module.exports = customerService;

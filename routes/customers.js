@@ -1,17 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const categoryService = require('../services/category.service');
+const CustomerService = require('../services/customer.service');
 const validatorHandler = require('../middlewares/validator.handler');
 const {
-  getCategorySchema,
-  updateCategorySchema,
-  createCategorySchema,
-} = require('../schema/category.schema');
+  getCustomerSchema,
+  createCustomerSchema,
+  updateCustomerSchema,
+} = require('../schema/customer.schema');
 
-const service = new categoryService();
+const service = new CustomerService();
 router.get(
   '/:id',
-  validatorHandler(getCategorySchema, 'params'),
+  validatorHandler(getCustomerSchema, 'params'),
   async (req, res) => {
     const { id } = req.params;
     const response = await service.findOne(id);
@@ -28,7 +28,7 @@ router.get('/', async (req, res) => {
 
 router.post(
   '/',
-  validatorHandler(createCategorySchema, 'body'),
+  validatorHandler(createCustomerSchema, 'body'),
   async (req, res) => {
     const body = req.body;
     const rta = await service.create(body);
@@ -41,8 +41,8 @@ router.post(
 
 router.put(
   '/:id',
-  validatorHandler(getCategorySchema, 'params'),
-  validatorHandler(updateCategorySchema, 'body'),
+  validatorHandler(getCustomerSchema, 'params'),
+  validatorHandler(updateCustomerSchema, 'body'),
   async (req, res) => {
     const { id } = req.params;
     const body = req.body;
@@ -57,7 +57,7 @@ router.put(
 
 router.delete(
   '/:id',
-  validatorHandler(getCategorySchema, 'params'),
+  validatorHandler(getCustomerSchema, 'params'),
   async (req, res) => {
     const { id } = req.params;
     const message = await service.delete(id);
