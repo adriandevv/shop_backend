@@ -33,7 +33,7 @@ router.post(
     const body = req.body;
     const rta = await service.create(body);
     res.status(201).json({
-      message: 'User was created',
+      message: 'Category was created',
       rta,
     });
   }

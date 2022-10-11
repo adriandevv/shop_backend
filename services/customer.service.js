@@ -5,11 +5,15 @@ const { models } = require('../libs/sequelize');
 class customerService {
   constructor() {}
   async create(data) {
-    const rta = await models.Customer.create(data);
+    const rta = await models.Customer.create(data, {
+      include: ['user'],
+    });
     return rta;
   }
   async find() {
-    const rta = await models.Customer.findAll();
+    const rta = await models.Customer.findAll({
+      include: 'user',
+    });
     return rta;
   }
   async findOne(id) {
