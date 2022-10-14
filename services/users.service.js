@@ -6,6 +6,7 @@ class userService {
   constructor() {}
   async create(data) {
     const rta = await models.User.create(data);
+    return rta;
   }
   async find() {
     const rta = await models.User.findAll({
